@@ -1,12 +1,16 @@
 import { Faction } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import { useState, useCallback } from "react";
-import AddFactionModal from "./AddFactionModal";
+import AddReputationModal from "./AddReputationModal";
 import NewFactionModal from "./NewFactionModal";
-import SignIn from "./Signin";
+import SignIn from "./SignIn";
+import SignOut from "./SignOut";
 
 type NavigationProps = { factions?: Faction[] };
 
 export default function Navigation({ factions }: NavigationProps) {
+  const { data: session } = useSession();
+
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
 
@@ -33,16 +37,22 @@ export default function Navigation({ factions }: NavigationProps) {
   return (
     <>
       <nav className="absolute top-0 right-0 flex gap-4 p-2 font-mono text-xs text-white/90">
-        <button className="hover:underline" onClick={handleNewClick}>
-          New Faction
-        </button>
-        <button className="hover:underline" onClick={handleAddClick}>
-          Add Rep
-        </button>
-        <SignIn />
+        {session && session.user ? (
+          <>
+            <button className="hover:underline" onClick={handleNewClick}>
+              New Faction
+            </button>
+            <button className="hover:underline" onClick={handleAddClick}>
+              Add Rep
+            </button>
+            <SignOut />
+          </>
+        ) : (
+          <SignIn />
+        )}
       </nav>
       <NewFactionModal isOpen={isNewOpen} onClick={handleNewClick} />
-      <AddFactionModal
+      <AddReputationModal
         isOpen={isAddOpen}
         onClick={handleAddClick}
         factions={factions}

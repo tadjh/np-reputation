@@ -2,16 +2,16 @@ import { Faction } from "@prisma/client";
 import clsx from "clsx";
 import { composeKey } from "../utils";
 
-type AddFactionProps = {
+type AddReputationModalProps = {
   isOpen: boolean;
   factions?: Faction[];
 } & React.HTMLAttributes<HTMLElement>;
 
-export default function AddFactionModal({
+export default function AddReputationModal({
   isOpen,
   onClick: handleClick,
   factions,
-}: AddFactionProps) {
+}: AddReputationModalProps) {
   if (!isOpen) return null;
   return (
     <div
