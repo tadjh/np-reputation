@@ -1,4 +1,5 @@
 import { Faction } from "@prisma/client";
+import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { useState, useCallback } from "react";
 import AddReputationModal from "./AddReputationModal";
@@ -9,7 +10,7 @@ import SignOut from "./SignOut";
 type NavigationProps = { factions?: Faction[] };
 
 export default function Navigation({ factions }: NavigationProps) {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [isNewOpen, setIsNewOpen] = useState(false);
   const [isAddOpen, setIsAddOpen] = useState(false);
@@ -24,6 +25,8 @@ export default function Navigation({ factions }: NavigationProps) {
     []
   );
 
+  const closeIsNewOpen = useCallback(() => setIsNewOpen(false), []);
+
   const handleAddClick: React.MouseEventHandler<HTMLElement> = useCallback(
     (event) => {
       event.preventDefault();
@@ -34,9 +37,16 @@ export default function Navigation({ factions }: NavigationProps) {
     []
   );
 
+  const closeIsAddOpen = useCallback(() => setIsAddOpen(false), []);
+
   return (
     <>
-      <nav className="absolute top-0 right-0 flex gap-4 p-2 font-mono text-xs text-white/90">
+      <nav
+        className={clsx(
+          "flex justify-end gap-4 p-2 font-mono text-xs text-white/90 transition-opacity",
+          status === "loading" ? "opacity-0" : "opacity-100"
+        )}
+      >
         {session && session.user ? (
           <>
             <button className="hover:underline" onClick={handleNewClick}>
@@ -51,12 +61,22 @@ export default function Navigation({ factions }: NavigationProps) {
           <SignIn />
         )}
       </nav>
-      <NewFactionModal isOpen={isNewOpen} onClick={handleNewClick} />
-      <AddReputationModal
-        isOpen={isAddOpen}
-        onClick={handleAddClick}
-        factions={factions}
-      />
+      {session && session.user && (
+        <>
+          <NewFactionModal
+            isOpen={isNewOpen}
+            onClick={handleNewClick}
+            forceClose={closeIsNewOpen}
+          />
+          <AddReputationModal
+            isOpen={isAddOpen}
+            onClick={handleAddClick}
+            forceClose={closeIsAddOpen}
+            factions={factions}
+            userId={session.user.id}
+          />
+        </>
+      )}
     </>
   );
 }

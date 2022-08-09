@@ -2,20 +2,30 @@ import clsx from "clsx";
 import { useState } from "react";
 import { trpc } from "../utils/trpc";
 
-type NewFactionProps = { isOpen: boolean } & React.HTMLAttributes<HTMLElement>;
+type NewFactionProps = {
+  isOpen: boolean;
+  forceClose: () => void;
+} & React.HTMLAttributes<HTMLElement>;
 
 export default function NewFactionModal({
   isOpen,
-  onClick: handleClick,
+  onClick: handleClose,
+  forceClose,
 }: NewFactionProps) {
-  const faction = trpc.useMutation(["faction.create"]);
+  const utils = trpc.useContext();
+  const faction = trpc.useMutation(["faction.create"], {
+    onSuccess() {
+      utils.invalidateQueries(["factions.all"]);
+      forceClose();
+    },
+  });
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
   const [color, setColor] = useState("#ffffff");
 
-  const handleCreateFaction: React.FormEventHandler<HTMLFormElement> = async (
-    event
-  ) => {
+  const handleCreateFaction: React.MouseEventHandler<
+    HTMLButtonElement
+  > = async (event) => {
     event.preventDefault();
 
     faction.mutate({ name, nickname, color });
@@ -35,18 +45,15 @@ export default function NewFactionModal({
   return (
     <div
       className={clsx(
-        "absolute z-40 flex h-full w-full items-center justify-center bg-black/80 font-mono text-sm text-white/90"
+        "absolute top-0 z-40 flex h-full w-full items-center justify-center bg-black/80 font-mono text-sm text-white/90"
       )}
-      onClick={handleClick}
+      onClick={handleClose}
     >
       <div className="w-11/12 rounded border border-slate-700 bg-slate-800 md:max-w-md">
         <div className="flex items-end justify-between border-b border-b-slate-700 bg-slate-900 p-2 text-base">
           New Faction
         </div>
-        <form
-          className="flex flex-col items-end gap-12 p-4"
-          onSubmit={handleCreateFaction}
-        >
+        <form className="flex flex-col items-end gap-12 p-4" autoComplete="off">
           <label htmlFor="name" className="flex w-full flex-col">
             Name
             <input
@@ -79,10 +86,15 @@ export default function NewFactionModal({
             <input id="image" className="border-b bg-transparent" />
           </label>
           <div className="flex gap-4">
-            <button className="px-2 py-1 hover:underline" onClick={handleClick}>
+            <button className="px-2 py-1 hover:underline" onClick={handleClose}>
               Cancel
             </button>
-            <button className="rounded border px-2 py-1 transition-colors hover:bg-slate-700">
+            <button
+              type="submit"
+              className="rounded border px-2 py-1 transition-colors hover:bg-slate-700"
+              onClick={handleCreateFaction}
+              disabled={faction.isLoading}
+            >
               Submit
             </button>
           </div>

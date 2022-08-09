@@ -1,9 +1,10 @@
-// import { createRouter } from "./context";
 import { z } from "zod";
+import { createRouter } from "./context";
 import { createProtectedRouter } from "./protected-router";
 
-export const factionRouter = createProtectedRouter()
-  .mutation("create", {
+export const factionProtectedRouter = createProtectedRouter().mutation(
+  "create",
+  {
     input: z.object({
       name: z.string(),
       nickname: z.string().max(8),
@@ -12,9 +13,11 @@ export const factionRouter = createProtectedRouter()
     async resolve({ input, ctx }) {
       return await ctx.prisma.faction.create({ data: input });
     },
-  })
-  .query("getAll", {
-    async resolve({ ctx }) {
-      return await ctx.prisma.faction.findMany();
-    },
-  });
+  }
+);
+
+export const factionRouter = createRouter().query("all", {
+  async resolve({ ctx }) {
+    return await ctx.prisma.faction.findMany();
+  },
+});
