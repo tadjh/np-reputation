@@ -22,9 +22,16 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
+      authorization: { params: { scope: "identify" } },
     }),
     // ...add more providers here
   ],
+  theme: {
+    colorScheme: "auto", // "auto" | "dark" | "light"
+    brandColor: "#064e3b", // Hex color code
+    logo: "https://np-reputation.vercel.app/_next/image?url=%2FuhnBb.png&w=3840&q=75", // Absolute URL to image
+    buttonText: "", // Hex color code
+  },
 };
 
 export default NextAuth(authOptions);

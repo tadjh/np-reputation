@@ -55,6 +55,14 @@ model User {
     sessions      Session[]
 }
 
+model Faction {
+    id            Int    @id @default(autoincrement())
+    name          String
+    nickname      String
+    color         String
+    image         String?
+}
+
 model VerificationToken {
     identifier String
     token      String   @unique
