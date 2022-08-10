@@ -64,7 +64,14 @@ const Home: NextPage = () => {
         </a>
       </footer>
 
-      <Toaster />
+      <Toaster
+        toastOptions={{
+          style: {
+            backgroundColor: "rgb(30, 41, 59)",
+            color: "rgba(255, 255, 255, 0.9)",
+          },
+        }}
+      />
     </>
   );
 };

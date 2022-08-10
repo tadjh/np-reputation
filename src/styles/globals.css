@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-hot-toast {
+  @apply bg-slate-800;
+}
