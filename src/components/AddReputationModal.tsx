@@ -30,7 +30,7 @@ export default function AddReputationModal({
       toast.success("Reputation added!", {
         id: toastRef.current,
       });
-      utils.invalidateQueries(["reputation.byId", { userId }]);
+      // utils.invalidateQueries(["reputation.byId", { userId }]);
       utils.invalidateQueries(["factions.unaligned", { userId }]);
       forceClose();
     },

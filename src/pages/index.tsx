@@ -48,7 +48,9 @@ const Home: NextPage = () => {
 
       <main className="relative flex flex-1 justify-center p-2 md:p-4">
         <Grid ref={gridRef}>
-          <Reputation gridRef={gridRef} userId={session?.user?.id} />
+          {gridRef.current !== null && (
+            <Reputation gridEl={gridRef.current} userId={session?.user?.id} />
+          )}
         </Grid>
       </main>
 
