@@ -1,7 +1,7 @@
 import { Faction } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { env } from "../env/client.mjs";
 import { clamp, composeKey } from "../utils";
@@ -32,7 +32,14 @@ export default function Reputation({
       setFactionsMap(new Map(result.map((res) => [res.id, res])));
     },
   });
-  const reputations = trpc.useQuery(["reputation.byId", { userId }]);
+  const reputations = trpc.useQuery(["reputation.byId", { userId }], {
+    onError() {
+      toast.error("Reputation could not be found.", { id: toastRef.current });
+    },
+    onSuccess() {
+      toast.success("Reputation loaded!", { id: toastRef.current });
+    },
+  });
   const updateRep = trpc.useMutation(["reputation.update"], {
     onMutate() {
       toastRef.current = toast.loading("Updating reputation...");
@@ -47,6 +54,10 @@ export default function Reputation({
       );
     },
   });
+
+  useEffect(() => {
+    toastRef.current = toast.loading("Loading reputation...");
+  }, []);
 
   if (gridRef.current === null) return null;
 
