@@ -25,3 +25,7 @@ export const reputation: Readonly<string[][]> = [
   ["Soft-Hearted Devil", "bg-red-900/20 hover:bg-red-900/30"],
   ["Wild Child", "hover:bg-slate-100/5"],
 ];
+
+export const headerHeight = 16;
+export const gap = 8;
+export const size = 40;

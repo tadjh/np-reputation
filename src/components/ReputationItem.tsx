@@ -1,34 +1,35 @@
-import { Faction, Reputation } from "@prisma/client";
-import { motion, useMotionValue } from "framer-motion";
-import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import React from "react";
+import { headerHeight, gap, size } from "../config";
 import { clamp } from "../utils";
 
 type ReputationProps = {
-  reputation: Reputation;
-  factionsMap: Map<string, Faction>;
-  headerHeight: number;
-  gap: number;
-  size: number;
+  id: string;
+  infamy: number;
+  fame: number;
+  color: string;
+  nickname: string;
   grid: DOMRect;
   canDrag: boolean;
   onUpdate: (id: string, fame: number, infamy: number) => void;
 };
 
 export default function ReputationItem({
-  reputation,
-  factionsMap,
-  headerHeight,
-  gap,
-  size,
+  id,
+  infamy,
+  fame,
+  color,
+  nickname,
   grid,
   canDrag,
   onUpdate,
 }: ReputationProps) {
-  const faction = factionsMap.get(reputation.factionId);
-  const ref = React.createRef<HTMLDivElement>();
-  const x = useMotionValue(0);
+  const ref = React.useRef<HTMLDivElement | null>(null);
 
-  const handleDragEnd = (id: string, ref: React.RefObject<HTMLDivElement>) => {
+  const handleDragEnd = (
+    id: string,
+    ref: React.RefObject<HTMLDivElement | null>
+  ) => {
     if (ref.current === null) return;
     const rep = ref.current.getBoundingClientRect();
     const x = (rep.right - rep.left) / 2 + rep.left;
@@ -46,22 +47,21 @@ export default function ReputationItem({
 
   return (
     <motion.div
-      id={reputation.id}
+      id={id}
       ref={ref}
       drag={canDrag}
       dragMomentum={false}
       dragElastic={0.0}
-      dragSnapToOrigin={true}
-      onDragEnd={() => handleDragEnd(reputation.id, ref)}
+      onDragEnd={() => handleDragEnd(id, ref)}
       className="pointer-events-auto absolute flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-opacity"
       style={{
-        backgroundColor: `${faction?.color || "#FFFFFF"}E6`,
-        top: (grid.height - headerHeight - gap) * reputation.infamy - size / 2,
-        left: (grid.width - headerHeight - gap) * reputation.fame - size / 2,
+        backgroundColor: `${color}E6`,
+        y: (grid.height - headerHeight - gap) * infamy - size / 2,
+        x: (grid.width - headerHeight - gap) * fame - size / 2,
       }}
     >
       <span className="font-bold text-white/90 mix-blend-difference">
-        {faction?.nickname || "????"}
+        {nickname}
       </span>
     </motion.div>
   );

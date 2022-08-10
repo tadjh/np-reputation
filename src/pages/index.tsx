@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 
 const Home: NextPage = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const gridRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -49,7 +49,11 @@ const Home: NextPage = () => {
       <main className="relative flex flex-1 justify-center p-2 md:p-4">
         <Grid ref={gridRef}>
           {gridRef.current !== null && (
-            <Reputation gridEl={gridRef.current} userId={session?.user?.id} />
+            <Reputation
+              gridEl={gridRef.current}
+              userId={session?.user?.id}
+              status={status}
+            />
           )}
         </Grid>
       </main>
