@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { useState, useCallback } from "react";
+import { env } from "../env/client.mjs";
 import AddReputationModal from "./AddReputationModal";
 import NewFactionModal from "./NewFactionModal";
 import SignIn from "./SignIn";
@@ -56,21 +57,23 @@ export default function Navigation() {
           <SignIn />
         )}
       </nav>
-      {session && session.user && (
-        <>
+      {session &&
+        session.user &&
+        session.user.id === env.NEXT_PUBLIC_FEATURED_USER && (
           <NewFactionModal
             isOpen={isNewOpen}
             onClick={handleNewClick}
             forceClose={closeIsNewOpen}
             userId={session.user.id}
           />
-          <AddReputationModal
-            isOpen={isAddOpen}
-            onClick={handleAddClick}
-            forceClose={closeIsAddOpen}
-            userId={session.user.id}
-          />
-        </>
+        )}
+      {session && session.user && (
+        <AddReputationModal
+          isOpen={isAddOpen}
+          onClick={handleAddClick}
+          forceClose={closeIsAddOpen}
+          userId={session.user.id}
+        />
       )}
     </>
   );

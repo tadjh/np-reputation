@@ -7,7 +7,6 @@ import Navigation from "../components/Navigation";
 import Reputation from "../components/Reputation";
 import { useSession } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
-import Link from "next/link";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
