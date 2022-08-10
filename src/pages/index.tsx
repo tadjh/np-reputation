@@ -7,6 +7,7 @@ import Navigation from "../components/Navigation";
 import Reputation from "../components/Reputation";
 import { useSession } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const { data: session } = useSession();
@@ -52,8 +53,16 @@ const Home: NextPage = () => {
         </Grid>
       </main>
 
-      <footer className="flex justify-center p-2 font-mono text-xs text-white/90">
-        Made with 🧡 by Tadjh
+      <footer className="flex justify-center gap-1 p-2 font-mono text-xs text-white/90">
+        Made with 🧡 by
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href="https://github.com/tadjh"
+          className="underline"
+        >
+          Tadjh
+        </a>
       </footer>
 
       <Toaster />
