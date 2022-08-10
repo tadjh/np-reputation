@@ -2,21 +2,16 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import React from "react";
-import { trpc } from "../utils/trpc";
 import Grid from "../components/Grid";
 import Navigation from "../components/Navigation";
-import { reputation } from "../config";
+import Reputation from "../components/Reputation";
+import { useSession } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 
 const Home: NextPage = () => {
-  const factions = trpc.useQuery(["factions.all"]);
+  const { data: session } = useSession();
 
-  React.useEffect(() => {
-    console.log("factions", factions);
-  });
-
-  const gridRefs = Array.from(reputation).map(() =>
-    React.createRef<HTMLDivElement>()
-  );
+  const gridRef = React.useRef<HTMLDivElement | null>(null);
 
   return (
     <>
@@ -30,7 +25,7 @@ const Home: NextPage = () => {
       </Head>
 
       <header>
-        <Navigation factions={factions.data} />
+        <Navigation />
         <div className="flex items-center justify-center gap-2 p-2 font-bold uppercase text-white/90 md:gap-4 md:p-4">
           <div
             className="break-all text-4xl md:text-7xl"
@@ -51,13 +46,17 @@ const Home: NextPage = () => {
         </div>
       </header>
 
-      <main className="flex flex-1 justify-center p-2 md:p-4">
-        <Grid gridRefs={gridRefs} />
+      <main className="relative flex flex-1 justify-center p-2 md:p-4">
+        <Grid ref={gridRef}>
+          <Reputation gridRef={gridRef} userId={session?.user?.id} />
+        </Grid>
       </main>
 
       <footer className="flex justify-center p-2 font-mono text-xs text-white/90">
         Made with 🧡 by Tadjh
       </footer>
+
+      <Toaster />
     </>
   );
 };
