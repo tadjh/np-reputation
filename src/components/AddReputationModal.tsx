@@ -70,10 +70,13 @@ export default function AddReputationModal({
             onChange={handleChange}
             required
           >
-            <option>Select an unaligned faction</option>
+            <option className="bg-slate-800">
+              Select an unaligned faction
+            </option>
             {unalignedFactions.data?.map(({ name, nickname, id }, index) => (
               <option
                 key={composeKey("option", index + 1)}
+                className="bg-slate-800"
                 value={id}
               >{`${nickname} (${name})`}</option>
             ))}

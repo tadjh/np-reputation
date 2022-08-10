@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { useState, useCallback } from "react";
+import { env } from "../env/client.mjs";
 import AddReputationModal from "./AddReputationModal";
 import NewFactionModal from "./NewFactionModal";
 import SignIn from "./SignIn";
@@ -44,9 +45,11 @@ export default function Navigation() {
       >
         {session && session.user ? (
           <>
-            <button className="hover:underline" onClick={handleNewClick}>
-              + Faction
-            </button>
+            {session.user.id === env.NEXT_PUBLIC_FEATURED_USER && (
+              <button className="hover:underline" onClick={handleNewClick}>
+                + Faction
+              </button>
+            )}
             <button className="hover:underline" onClick={handleAddClick}>
               + Reputation
             </button>
@@ -58,12 +61,14 @@ export default function Navigation() {
       </nav>
       {session && session.user && (
         <>
-          <NewFactionModal
-            isOpen={isNewOpen}
-            onClick={handleNewClick}
-            forceClose={closeIsNewOpen}
-            userId={session.user.id}
-          />
+          {session.user.id === env.NEXT_PUBLIC_FEATURED_USER && (
+            <NewFactionModal
+              isOpen={isNewOpen}
+              onClick={handleNewClick}
+              forceClose={closeIsNewOpen}
+              userId={session.user.id}
+            />
+          )}
           <AddReputationModal
             isOpen={isAddOpen}
             onClick={handleAddClick}
