@@ -55,10 +55,6 @@ export default function Reputation({
     },
   });
 
-  useEffect(() => {
-    toastRef.current = toast.loading("Loading reputation...");
-  }, []);
-
   if (gridRef.current === null) return null;
 
   const grid = gridRef.current.getBoundingClientRect();
