@@ -45,9 +45,11 @@ export default function Navigation() {
       >
         {session && session.user ? (
           <>
-            <button className="hover:underline" onClick={handleNewClick}>
-              + Faction
-            </button>
+            {session.user.id === env.NEXT_PUBLIC_FEATURED_USER && (
+              <button className="hover:underline" onClick={handleNewClick}>
+                + Faction
+              </button>
+            )}
             <button className="hover:underline" onClick={handleAddClick}>
               + Reputation
             </button>
@@ -57,23 +59,23 @@ export default function Navigation() {
           <SignIn />
         )}
       </nav>
-      {session &&
-        session.user &&
-        session.user.id === env.NEXT_PUBLIC_FEATURED_USER && (
-          <NewFactionModal
-            isOpen={isNewOpen}
-            onClick={handleNewClick}
-            forceClose={closeIsNewOpen}
+      {session && session.user && (
+        <>
+          {session.user.id === env.NEXT_PUBLIC_FEATURED_USER && (
+            <NewFactionModal
+              isOpen={isNewOpen}
+              onClick={handleNewClick}
+              forceClose={closeIsNewOpen}
+              userId={session.user.id}
+            />
+          )}
+          <AddReputationModal
+            isOpen={isAddOpen}
+            onClick={handleAddClick}
+            forceClose={closeIsAddOpen}
             userId={session.user.id}
           />
-        )}
-      {session && session.user && (
-        <AddReputationModal
-          isOpen={isAddOpen}
-          onClick={handleAddClick}
-          forceClose={closeIsAddOpen}
-          userId={session.user.id}
-        />
+        </>
       )}
     </>
   );
