@@ -3,19 +3,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "sqlite"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
-  // Further reading: 
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+  provider = "mysql"
   url      = env("DATABASE_URL")
-}
-
-model Example {
-  id String @id @default(cuid())
+  referentialIntegrity = "prisma"
 }
 
 // Necessary for Next auth
@@ -25,12 +19,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? //@db.Text
-  access_token      String? //@db.Text
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? //@db.Text
+  id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -57,7 +51,7 @@ model User {
 }
 
 model Faction {
-  id         Int          @id @default(autoincrement())
+  id         String    @id @default(cuid())
   name       String
   nickname   String
   color      String
@@ -70,7 +64,7 @@ model Reputation {
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
   faction   Faction @relation(fields: [factionId], references: [id], onDelete: Cascade)
-  factionId Int
+  factionId String
   fame      Float   @default(0.5) 
   infamy    Float   @default(0.5)
 }
