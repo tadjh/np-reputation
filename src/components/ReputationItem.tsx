@@ -53,16 +53,14 @@ export default function ReputationItem({
       dragMomentum={false}
       dragElastic={0.0}
       onDragEnd={() => handleDragEnd(id, ref)}
-      className="pointer-events-auto absolute flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-opacity"
+      className="pointer-events-auto absolute flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-400 shadow-xl transition-opacity"
       style={{
         backgroundColor: `${color}E6`,
         y: (grid.height - headerHeight - gap) * infamy - size / 2,
         x: (grid.width - headerHeight - gap) * fame - size / 2,
       }}
     >
-      <span className="font-bold text-white/90 mix-blend-difference">
-        {nickname}
-      </span>
+      <span className="font-bold text-slate-200">{nickname}</span>
     </motion.div>
   );
 }
